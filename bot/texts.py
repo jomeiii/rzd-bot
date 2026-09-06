@@ -1,1 +1,3 @@
 SEARCH_TICKETS = "🚂 Найти билеты"
+BACK_TRAIN_BUTTON = '◀️'
+NEXT_TRAIN_BUTTON = '▶️'
