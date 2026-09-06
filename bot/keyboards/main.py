@@ -4,6 +4,9 @@ from bot.texts import SEARCH_TICKETS
 from datetime import date, timedelta
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+import locale
+locale.setlocale(locale.LC_TIME, "ru_RU.UTF-8")
+
 main_keyboard = ReplyKeyboardMarkup(
     keyboard=[
         [
@@ -23,7 +26,8 @@ for i in range(9):
     elif i == 1:
         text = f"Завтра {current_date:%d.%m}"
     else:
-        text = f"{current_date.strftime('%a')} {current_date:%d.%m}"
+        day = current_date.strftime('%A')[0].upper() + current_date.strftime('%A')[1:]
+        text = f"{day} {current_date:%d.%m}"
 
     calendar_keyboard_builder.button(
         text=text,

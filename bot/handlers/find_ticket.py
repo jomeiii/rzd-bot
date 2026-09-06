@@ -70,9 +70,7 @@ async def select_date(callback: CallbackQuery, state: FSMContext):
 
     await callback.message.edit_text(
         get_train_info(trains, 0),
-        reply_markup=train_navigation_keyboard(0, len(trains), get_link(from_station, to_station, departure_date))
-        if len(trains) > 1 else None
-    )
+        reply_markup=train_navigation_keyboard(0, len(trains), get_link(from_station, to_station, departure_date)))
 
     await state.set_state(SearchState.viewing_trains)
     await callback.answer()
@@ -88,7 +86,7 @@ async def change_train(callback: CallbackQuery, state: FSMContext):
     trains = data["trains"]
     departure_date = data["departure_date"]
 
-    await callback.message.edit_text(   
+    await callback.message.edit_text(
         get_train_info(trains, index),
         reply_markup=train_navigation_keyboard(index, len(trains), get_link(from_station, to_station, departure_date))
     )
@@ -115,4 +113,5 @@ def get_train_info(trains: TrainRoute, index: int) -> str:
 
 
 def get_link(from_city: str, to_city: str, departure: datetime) -> str:
-    return f'https://www.tutu.ru/poezda/{CITY_NAMES[from_city]}/{CITY_NAMES[to_city]}/?date={departure.strftime("%d.%m.%Y")}'
+    return (f'https://www.tutu.ru/poezda/{CITY_NAMES[from_city]}/{CITY_NAMES[to_city]}/'
+            f'?date={departure.strftime("%d.%m.%Y")}&travelers=1')
