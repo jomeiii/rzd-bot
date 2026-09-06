@@ -3,13 +3,12 @@ import logging
 import sys
 import json
 
-from aiogram import Bot, Dispatcher, html
+from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
-from aiogram.filters import CommandStart
-from aiogram.types import Message
 
-from keyboards.main import main_keyboard
+from bot.handlers.start import router as start_router
+from bot.handlers.find_ticket import router as find_ticket_router
 
 with open("config.json", "r") as f:
     BOT_TOKEN = json.load(f)["BOT_TOKEN"]
@@ -17,15 +16,11 @@ with open("config.json", "r") as f:
 dp = Dispatcher()
 
 
-@dp.message(CommandStart())
-async def command_start_handler(message: Message) -> None:
-    await message.answer(f"Привет, {html.bold(message.from_user.full_name)}!\n"
-                         f"Это бот по поиску дешевых жд билетов.",
-                         reply_markup=main_keyboard)
-
-
 async def main() -> None:
     bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+
+    dp.include_router(start_router)
+    dp.include_router(find_ticket_router)
 
     await dp.start_polling(bot)
 

@@ -1,10 +1,10 @@
 from datetime import date, timedelta
 
 import rzd_api.exceptions
-from rzd_api import RzdClient
+from rzd_api import RzdClient, TrainRoute
 
 
-def search_tickets(from_station: str | int, to_station: str | int, departure_date: date) -> int:
+def search_tickets(from_station: str | int, to_station: str | int, departure_date: date) -> list[TrainRoute] | None:
     with RzdClient() as client:
         try:
             trains = client.search_tickets(
@@ -12,20 +12,9 @@ def search_tickets(from_station: str | int, to_station: str | int, departure_dat
                 to_station=to_station,
                 departure_date=departure_date
             )
-
-            for train in trains:
-                print(f"Поезд: {train.number}")
-                print(f"Откуда: {train.origin_name}")
-                print(f"Куда: {train.destination_name}")
-                print(f"Отправление: {train.departure_time}")
-                print(f"Прибытие: {train.arrival_time}")
-                print(f"Цена от: {train.min_price} ₽")
-                print(f"Мест: {train.available_places}")
-                print()
-
-                return 0
+            return trains
 
         except rzd_api.exceptions.RzdAPIError as e:
             if e.code == 310:
-                print('Поездов нет в этот день')
-                return 310
+                return None
+
